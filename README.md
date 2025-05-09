@@ -263,9 +263,9 @@ indices = [[index_map[i] for i in user_recs] for user_recs in new_indices]
 
 **Rumus Precision@K:**
 
-$
+$$
 \text{Precision@K} = \frac{\text{Jumlah item relevan di top-K}}{K}
-$
+$$
 
 Dimana:
 - **Jumlah item relevan di top-K** adalah jumlah item yang relevan dalam K rekomendasi teratas.
@@ -277,9 +277,9 @@ Dimana:
 
 **Rumus Recall@K:**
 
-$
+$$
 \text{Recall@K} = \frac{\text{Jumlah item relevan di top-K}}{\text{Jumlah total item relevan}}
-$
+$$
 
 Dimana:
 - **Jumlah total item relevan** adalah jumlah keseluruhan item relevan yang seharusnya direkomendasikan kepada pengguna.
@@ -300,9 +300,9 @@ MAP dihitung sebagai rata-rata dari **Average Precision (AP)** untuk setiap user
 
 Untuk satu user:
 
-$
+$$
 \text{AP} = \frac{1}{|\text{Item Relevan}|} \sum_{k=1}^{N} P(k) \cdot rel(k)
-$
+$$
 
 - \( P(k) \) = Precision pada posisi ke-`k`.
 - \( rel(k) \) = 1 jika item ke-`k` relevan, 0 jika tidak.
@@ -315,7 +315,7 @@ $$
 $$
 
 - \( |U| \) = Jumlah user.
-- $\text{AP}_u$ = Average Precision untuk user ke-`u`.
+- $$\text{AP}_u$$ = Average Precision untuk user ke-`u`.
 
 ## Hasil Evaluasi Model Collaborative Filtering
 |Metrik|	Nilai	|Interpretasi|
