@@ -33,8 +33,8 @@ Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tah
   Untuk mendukung pengambilan keputusan karier secara objektif, terarah, dan berbasis kecocokan antara profil pribadi dan permintaan pasar.
 
 ## c. Solution Statement
-- Mengembangkan sistem rekomendasi pekerjaan berbasis Content-Based Filtering.
-- Mengintegrasikan Collaborative Filtering untuk meningkatkan personalisasi.
+- Mengembangkan sistem rekomendasi pekerjaan berbasis ollaborative Filtering.
+- Mengembangkan sistem rekomendasi berbasis Hybrid Recommendation System untuk meningkatkan personalisasi.
 - Melakukan evaluasi terhadap model.
 ---
 
@@ -129,7 +129,7 @@ Keterangan:
 ## Konversi Skills dan Job Requirements menjadi set
 Konversi ini digunakan untuk preprocessing pada model lightFM.
 
-## TF-IDF 
+## TF-IDF (Collaborative Filtering)
 **TF-IDF (Term Frequency - Inverse Document Frequency)** adalah teknik vektorisasi teks yang digunakan untuk menilai seberapa penting suatu kata dalam sebuah dokumen relatif terhadap semua dokumen lainnya dalam kumpulan data.
 
 - **TF (Term Frequency):** Mengukur seberapa sering kata muncul dalam dokumen.
@@ -147,7 +147,7 @@ Dimana:
 
 TF-IDF membantu menonjolkan kata-kata penting yang bersifat spesifik dan mengurangi bobot kata-kata umum seperti "dan", "atau", "adalah", dll.
 
-## Pre-processing Collaborative Filtering
+## Pre-processing Collaborative Filtering + Content Based Filtering (Hybrid)
 ### Inisialisasi Dataset
 
 ```python
@@ -189,7 +189,7 @@ interactions_labels = df['Recommended'].astype(float)
   - Rasio: 80% data latih dan 20% data uji.
 
 # Model Development
-## Content Based Filtering
+## Collaborative Filtering
 ### NearestNeighbors
 **NearestNeighbors** dari sklearn adalah metode memory-based collaborative filtering. Ia mencari item terdekat (neighbors) menggunakan metrik kesamaan (misalnya cosine similarity)[[4]](https://scikit-learn.org/stable/modules/neighbors.html#neighbors).
 
@@ -198,7 +198,7 @@ interactions_labels = df['Recommended'].astype(float)
   - Tidak memerlukan proses training.
   - Sangat cocok untuk dataset kecil atau sedang.
 
-## Collaborative Filtering
+## Collaborative Filtering + Content Based Filtering (Hybrid)
 ### LightFM
 **LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP)[[3]](https://anaconda.org/conda-forge/lightfm#:~:text=LightFM%20is%20a%20Python%20implementation,and%20produces%20high%20quality%20results.).
 
