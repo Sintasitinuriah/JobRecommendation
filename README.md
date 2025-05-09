@@ -220,6 +220,11 @@ interactions_labels = df['Recommended'].astype(float)
 - 0.5 = model tebak-tebakan (random guess)
 - < 0.5 = model buruk (prediksi berlawanan)
 
+Hasil model:
+  * **AUC Score**: 0.9004
+    Makna: Ini adalah Area Under the ROC Curve, yang mengukur kemampuan model membedakan antara kelas (relevan vs tidak relevan).
+    * **Interpretasi**: Skor 0.9004 sangat bagus — model secara keseluruhan mampu membedakan antara item relevan dan tidak relevan dengan tingkat keakuratan tinggi.
+
 ### Precision@K
 
 **Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model [[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
@@ -233,6 +238,11 @@ $
 Dimana:
 - **Jumlah item relevan di top-K** adalah jumlah item yang relevan dalam K rekomendasi teratas.
 - **K** adalah jumlah item teratas yang direkomendasikan.
+
+Hasil pada model:
+  * **Precision@5**: 0.1604
+    Makna: Dari 5 rekomendasi teratas yang diberikan oleh sistem, sekitar 16.04% benar-benar relevan.
+    * **Interpretasi**: Model masih menghasilkan cukup banyak item yang tidak relevan di posisi atas. Untuk sistem rekomendasi, ini berarti hanya 1 dari 6 item yang direkomendasikan tepat sasaran
 
 ### Recall@K
 
@@ -248,7 +258,10 @@ Dimana:
 - **Jumlah total item relevan** adalah jumlah keseluruhan item relevan yang seharusnya direkomendasikan kepada pengguna.
 - **K** adalah jumlah item teratas yang direkomendasikan.
 
-
+Hasil model:
+  * **Recall@5**: 0.8020
+    Makna: Dari semua item relevan yang seharusnya direkomendasikan, 80.20% berhasil dimasukkan dalam 5 besar.
+    * **Interpretasi**: Model sangat baik dalam menemukan item yang relevan — ia menangkap sebagian besar dari apa yang penting, meskipun tidak semuanya benar-benar akurat (lihat Precision).
 
 
 ---
