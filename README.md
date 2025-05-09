@@ -310,9 +310,9 @@ $
 
 2. **Mean Average Precision (MAP)**
 
-$
+$$
 \text{MAP} = \frac{1}{|U|} \sum_{u=1}^{|U|} \text{AP}_u
-$
+$$
 
 - \( |U| \) = Jumlah user.
 - $\text{AP}_u$ = Average Precision untuk user ke-`u`.
