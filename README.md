@@ -81,13 +81,13 @@ Dari hasil diatas terdapat:
 - Dataset ini memiliki outliers pada fitur `User_ID`, `Job_ID`, `Match_Score` dan `Recommended`
 
 ### d. Univariate Analysis
-- Visualisasi distribusi boxplot
+#### a)Visualisasi distribusi boxplot
 ![box](image/boxplot.png)
 Keterangan:
 - Dataset ini tampaknya berisi informasi pengguna, pekerjaan, dan kecocokan antara keduanya.
 - Variabel seperti Match_Score dan Recommended digunakan untuk mengevaluasi apakah pengguna cocok dengan suatu pekerjaan.
 - User_Skills dan Job_Requirements memiliki distribusi yang serupa, mendukung hipotesis bahwa sistem sedang menilai kecocokan berdasarkan keterampilan.
-- Visualisasi distribusi histogram
+#### b) Visualisasi distribusi histogram
 ![hist](image/unvariate-hist.png)
 Keterangan:
 - Distribusi ID dan match score merata → dataset terstruktur dengan baik.
@@ -95,25 +95,25 @@ Keterangan:
 - Jumlah keterampilan (user dan job) menunjukkan tren yang realistis dan konsisten → cocok untuk analisis lanjut atau training machine learning.
 
 ### e. Multivariate Analysis
-- Korelasi antar variabel numerik dilakukan dengan heatmap atau matriks korelasi.
+#### a)  Korelasi antar variabel numerik dilakukan dengan heatmap atau matriks korelasi.
 ![corr](image/corr.png)
 Keterangan: 
 - Satu-satunya korelasi bermakna adalah antara Match_Score dan Recommended (0.69), yang masuk akal karena sistem rekomendasi mungkin mengandalkan match score untuk merekomendasikan pekerjaan.
 - ID pengguna dan ID pekerjaan tidak berkorelasi dengan variabel target atau prediktor lainnya, seperti yang diharapkan (karena mereka hanya identifier).
 - Tidak ada multikolinearitas di antara fitur — bagus untuk analisis statistik atau machine learning.
-- Visualisasi Pairplot numerical columns 
+#### b) Visualisasi Pairplot numerical columns 
 ![pair](image/pair.png)
 Keterangan:
 - Match_Score adalah prediktor utama terhadap apakah suatu pekerjaan akan direkomendasikan.
 - Variabel User_ID dan Job_ID tidak memiliki hubungan bermakna dengan output, dan bisa diabaikan/dihilangkan dalam model prediksi.
 - Dataset menunjukkan kelas tidak seimbang (imbalance), sehingga perlu penanganan seperti oversampling atau penyesuaian metrik evaluasi jika dipakai untuk klasifikasi.
-- Visualisasi Top 10 User Skills
+#### c) Visualisasi Top 10 User Skills
 ![skill](image/skill.png)
 keterangan: 
 - Dataset ini berisi pengguna dengan skill yang sangat relevan dengan industri teknologi dan data.
 - Bisa menjadi basis bagus untuk rekomendasi pekerjaan di bidang teknologi.
 - Jika digunakan untuk matching dengan lowongan, maka pekerjaan yang membutuhkan skill-skill ini kemungkinan besar akan lebih cocok atau memiliki match score lebih tinggi.
--Visualisasi Top 10 Job Requirements
+#### d) Visualisasi Top 10 Job Requirements
 ![job](image/job.png)
 Keterangan:
 - Terdapat kecocokan kuat antara skill pengguna dan kebutuhan pekerjaan.
