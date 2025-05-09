@@ -5,11 +5,11 @@
 ![job](https://eduauraapublic.s3.ap-south-1.amazonaws.com/webassets/images/blogs/highest-paying-jobs-in-india.jpg)
 
 ## Domain Proyek
-Terdapat sekitar 80% mahasiswa di Indonesia bekerja tidak sesuai dengan jurusan kuliahnya. Padahal anggapan bahwa jurusan kuliah akan menentukan arah karier di masa depan masih banyak dipercayai oleh masyarakat[Afero et al. (2023)](https://e-journals.unmul.ac.id/index.php/PSIKO/article/view/12315). Hal-hal yang menyebabkan tejadinya kekeliruan ini antara lain:
+Terdapat sekitar 80% mahasiswa di Indonesia bekerja tidak sesuai dengan jurusan kuliahnya. Padahal anggapan bahwa jurusan kuliah akan menentukan arah karier di masa depan masih banyak dipercayai oleh masyarakat[1](https://e-journals.unmul.ac.id/index.php/PSIKO/article/view/12315). Hal-hal yang menyebabkan tejadinya kekeliruan ini antara lain:
 - Minat, dan misi akan berubah seiring berjalannya waktu
 - Lowongan kerja terbatas, tidak sebanding dengan jumlah lulusan. Hal ini menyebabkan statement "Dari pada gak kerja, mending kerjain yang ada!"
 
-Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tahun 2023 di Indonesia mencapai 7,86 juta orang, atau setara dengan 5,32% dari total angkatan kerja nasional[Frisnoiry et al. (2024)](https://journal.stekom.ac.id/index.php/kompak/article/view/1866). Kemungkinan terbesar angka pengangguran ini akan bertambah seiring berjalannya waktu, maka dari itu harapan untuk pengembaagan job recommendation system ini menjadi solusi untuk meminimaliris angkan pengangguran dan pekerjaan yang tidak sesuai dengan bidangnya. 
+Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tahun 2023 di Indonesia mencapai 7,86 juta orang, atau setara dengan 5,32% dari total angkatan kerja nasional[2](https://journal.stekom.ac.id/index.php/kompak/article/view/1866). Kemungkinan terbesar angka pengangguran ini akan bertambah seiring berjalannya waktu, maka dari itu harapan untuk pengembaagan job recommendation system ini menjadi solusi untuk meminimaliris angkan pengangguran dan pekerjaan yang tidak sesuai dengan bidangnya. 
 
 ---
 # Business Understanding
@@ -83,19 +83,44 @@ Dari hasil diatas terdapat:
 ### d. Univariate Analysis
 - Visualisasi distribusi boxplot
 ![box](image/boxplot.png)
+Keterangan:
+- Dataset ini tampaknya berisi informasi pengguna, pekerjaan, dan kecocokan antara keduanya.
+- Variabel seperti Match_Score dan Recommended digunakan untuk mengevaluasi apakah pengguna cocok dengan suatu pekerjaan.
+- User_Skills dan Job_Requirements memiliki distribusi yang serupa, mendukung hipotesis bahwa sistem sedang menilai kecocokan berdasarkan keterampilan.
 - Visualisasi distribusi histogram
 ![hist](image/unvariate-hist.png)
+Keterangan:
+- Distribusi ID dan match score merata → dataset terstruktur dengan baik.
+- Distribusi Recommended sangat tidak seimbang → ini bisa menjadi masalah saat melatih model klasifikasi.
+- Jumlah keterampilan (user dan job) menunjukkan tren yang realistis dan konsisten → cocok untuk analisis lanjut atau training machine learning.
 
 ### e. Multivariate Analysis
 - Korelasi antar variabel numerik dilakukan dengan heatmap atau matriks korelasi.
 ![corr](image/corr.png)
+Keterangan: 
+> Satu-satunya korelasi bermakna adalah antara Match_Score dan Recommended (0.69), yang masuk akal karena sistem rekomendasi mungkin mengandalkan match score untuk merekomendasikan pekerjaan.
+> ID pengguna dan ID pekerjaan tidak berkorelasi dengan variabel target atau prediktor lainnya, seperti yang diharapkan (karena mereka hanya identifier).
+> Tidak ada multikolinearitas di antara fitur — bagus untuk analisis statistik atau machine learning.
 - Visualisasi Pairplot numerical columns 
 ![pair](image/pair.png)
+Keterangan:
+- Match_Score adalah prediktor utama terhadap apakah suatu pekerjaan akan direkomendasikan.
+- Variabel User_ID dan Job_ID tidak memiliki hubungan bermakna dengan output, dan bisa diabaikan/dihilangkan dalam model prediksi.
+- Dataset menunjukkan kelas tidak seimbang (imbalance), sehingga perlu penanganan seperti oversampling atau penyesuaian metrik evaluasi jika dipakai untuk klasifikasi.
 - Visualisasi Top 10 User Skills
 ![skill](image/skill.png)
+keterangan: 
+- Dataset ini berisi pengguna dengan skill yang sangat relevan dengan industri teknologi dan data.
+- Bisa menjadi basis bagus untuk rekomendasi pekerjaan di bidang teknologi.
+- Jika digunakan untuk matching dengan lowongan, maka pekerjaan yang membutuhkan skill-skill ini kemungkinan besar akan lebih cocok atau memiliki match score lebih tinggi.
 -Visualisasi Top 10 Job Requirements
 ![job](image/job.png)
-
+Keterangan:
+- Terdapat kecocokan kuat antara skill pengguna dan kebutuhan pekerjaan.
+- Ini berarti fitur Match_Score bisa cukup relevan jika dihitung berdasarkan kesamaan skill.
+- Bisa dibuat model atau logika sistem rekomendasi berdasarkan:
+> Tingkat kecocokan skill pengguna dan requirement pekerjaan.
+> Frekuensi/berat skill (semakin sering skill diminta, semakin berharga).
 ---
 # Data Preprocessing
 ## Penganganan Outliers
@@ -166,7 +191,7 @@ interactions_labels = df['Recommended'].astype(float)
 # Model Development
 ## Content Based Filtering
 ### NearestNeighbors
-**NearestNeighbors** dari sklearn adalah metode memory-based collaborative filtering. Ia mencari item terdekat (neighbors) menggunakan metrik kesamaan (misalnya cosine similarity).
+**NearestNeighbors** dari sklearn adalah metode memory-based collaborative filtering. Ia mencari item terdekat (neighbors) menggunakan metrik kesamaan (misalnya cosine similarity)[4](https://scikit-learn.org/stable/modules/neighbors.html#neighbors).
 
 **Keunggulan**:
   - Mudah diimplementasikan.
@@ -175,7 +200,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 ## Collaborative Filtering
 ### LightFM
-**LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP).
+**LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP)[3](https://anaconda.org/conda-forge/lightfm#:~:text=LightFM%20is%20a%20Python%20implementation,and%20produces%20high%20quality%20results.).
 
 **Keunggulan**:
   - Dapat memanfaatkan fitur pengguna dan item (content-based).
@@ -184,7 +209,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 # Evaluasi 
 ## ROC-AUC
-**ROC-AUC** adalah metrik evaluasi untuk masalah klasifikasi biner yang mengukur kemampuan model dalam membedakan antara dua kelas (dalam kasusmu: pekerjaan yang direkomendasikan 1 dan tidak 0).
+**ROC-AUC** adalah metrik evaluasi untuk masalah klasifikasi biner yang mengukur kemampuan model dalam membedakan antara dua kelas (dalam kasusmu: pekerjaan yang direkomendasikan 1 dan tidak 0)[5](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 ### ROC adalah kurva yang menunjukkan trade-off antara:
 - True Positive Rate (TPR): berapa banyak item positif yang berhasil dikenali (juga disebut Recall)
@@ -197,7 +222,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 ### Precision@K
 
-**Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model.
+**Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model [5](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 **Rumus Precision@K:**
 
@@ -211,7 +236,7 @@ Dimana:
 
 ### Recall@K
 
-**Recall@K** mengukur seberapa banyak item relevan yang ditemukan di dalam **K rekomendasi teratas** yang diberikan oleh model. Recall menghitung **proporsi item relevan** yang berhasil diprediksi oleh model dari seluruh item relevan yang ada.
+**Recall@K** mengukur seberapa banyak item relevan yang ditemukan di dalam **K rekomendasi teratas** yang diberikan oleh model. Recall menghitung **proporsi item relevan** yang berhasil diprediksi oleh model dari seluruh item relevan yang ada[5](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 **Rumus Recall@K:**
 
@@ -228,5 +253,12 @@ Dimana:
 
 ---
 # Referensi 
-1. Afero, F. I., Dimala, C. P., & Ibad, M. C. (2023). Self-Efficacy as a Mediation the Influence of Proactive Personality on Career Adaptability in Early Adults. Psikostudia: Jurnal Psikologi, 12(4), 517-523.
-2. Frisnoiry, S., Sihotang, H. M., Indri, N., & Munthe, T. (2024). Analisis Permasalahan Pengangguran Di Indonesia. Kompak: Jurnal Ilmiah Komputerisasi Akuntansi, 17(1), 366-375.
+[1] F. I. Afero, C. P. Dimala, and M. C. Ibad, "Self-Efficacy as a Mediation the Influence of Proactive Personality on Career Adaptability in Early Adults," Psikostudia: Jurnal Psikologi, vol. 12, no. 4, pp. 517–523, 2023.
+
+[2] S. Frisnoiry, H. M. Sihotang, N. Indri, and T. Munthe, "Analisis Permasalahan Pengangguran Di Indonesia," Kompak: Jurnal Ilmiah Komputerisasi Akuntansi, vol. 17, no. 1, pp. 366–375, 2024.
+
+[3] conda-forge, "LightFM :: Anaconda.org", Anaconda, [Online]. Available: https://anaconda.org/conda-forge/lightfm. [Accessed: May 9, 2025].
+
+[4]Scikit-learn developers, “Neighbors: k-Nearest Neighbors (KNN),” Scikit-learn: Machine Learning in Python, [Online]. Available: https://scikit-learn.org/stable/modules/neighbors.html#neighbors. [Accessed: May 9, 2025].
+
+[5]Scikit-learn developers, “Metrics and scoring: quantifying the quality of predictions,” Scikit-learn: Machine Learning in Python, [Online]. Available: https://scikit-learn.org/stable/modules/model_evaluation.html. [Accessed: May 9, 2025].
