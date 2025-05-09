@@ -5,11 +5,11 @@
 ![job](https://eduauraapublic.s3.ap-south-1.amazonaws.com/webassets/images/blogs/highest-paying-jobs-in-india.jpg)
 
 ## Domain Proyek
-Terdapat sekitar 80% mahasiswa di Indonesia bekerja tidak sesuai dengan jurusan kuliahnya. Padahal anggapan bahwa jurusan kuliah akan menentukan arah karier di masa depan masih banyak dipercayai oleh masyarakat[1](https://e-journals.unmul.ac.id/index.php/PSIKO/article/view/12315). Hal-hal yang menyebabkan tejadinya kekeliruan ini antara lain:
+Terdapat sekitar 80% mahasiswa di Indonesia bekerja tidak sesuai dengan jurusan kuliahnya. Padahal anggapan bahwa jurusan kuliah akan menentukan arah karier di masa depan masih banyak dipercayai oleh masyarakat[[1]](https://e-journals.unmul.ac.id/index.php/PSIKO/article/view/12315). Hal-hal yang menyebabkan tejadinya kekeliruan ini antara lain:
 - Minat, dan misi akan berubah seiring berjalannya waktu
 - Lowongan kerja terbatas, tidak sebanding dengan jumlah lulusan. Hal ini menyebabkan statement "Dari pada gak kerja, mending kerjain yang ada!"
 
-Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tahun 2023 di Indonesia mencapai 7,86 juta orang, atau setara dengan 5,32% dari total angkatan kerja nasional[2](https://journal.stekom.ac.id/index.php/kompak/article/view/1866). Kemungkinan terbesar angka pengangguran ini akan bertambah seiring berjalannya waktu, maka dari itu harapan untuk pengembaagan job recommendation system ini menjadi solusi untuk meminimaliris angkan pengangguran dan pekerjaan yang tidak sesuai dengan bidangnya. 
+Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tahun 2023 di Indonesia mencapai 7,86 juta orang, atau setara dengan 5,32% dari total angkatan kerja nasional[[2]](https://journal.stekom.ac.id/index.php/kompak/article/view/1866). Kemungkinan terbesar angka pengangguran ini akan bertambah seiring berjalannya waktu, maka dari itu harapan untuk pengembaagan job recommendation system ini menjadi solusi untuk meminimaliris angkan pengangguran dan pekerjaan yang tidak sesuai dengan bidangnya. 
 
 ---
 # Business Understanding
@@ -98,9 +98,9 @@ Keterangan:
 - Korelasi antar variabel numerik dilakukan dengan heatmap atau matriks korelasi.
 ![corr](image/corr.png)
 Keterangan: 
-> Satu-satunya korelasi bermakna adalah antara Match_Score dan Recommended (0.69), yang masuk akal karena sistem rekomendasi mungkin mengandalkan match score untuk merekomendasikan pekerjaan.
-> ID pengguna dan ID pekerjaan tidak berkorelasi dengan variabel target atau prediktor lainnya, seperti yang diharapkan (karena mereka hanya identifier).
-> Tidak ada multikolinearitas di antara fitur — bagus untuk analisis statistik atau machine learning.
+- Satu-satunya korelasi bermakna adalah antara Match_Score dan Recommended (0.69), yang masuk akal karena sistem rekomendasi mungkin mengandalkan match score untuk merekomendasikan pekerjaan.
+- ID pengguna dan ID pekerjaan tidak berkorelasi dengan variabel target atau prediktor lainnya, seperti yang diharapkan (karena mereka hanya identifier).
+- Tidak ada multikolinearitas di antara fitur — bagus untuk analisis statistik atau machine learning.
 - Visualisasi Pairplot numerical columns 
 ![pair](image/pair.png)
 Keterangan:
@@ -119,8 +119,8 @@ Keterangan:
 - Terdapat kecocokan kuat antara skill pengguna dan kebutuhan pekerjaan.
 - Ini berarti fitur Match_Score bisa cukup relevan jika dihitung berdasarkan kesamaan skill.
 - Bisa dibuat model atau logika sistem rekomendasi berdasarkan:
-> Tingkat kecocokan skill pengguna dan requirement pekerjaan.
-> Frekuensi/berat skill (semakin sering skill diminta, semakin berharga).
+- Tingkat kecocokan skill pengguna dan requirement pekerjaan.
+- Frekuensi/berat skill (semakin sering skill diminta, semakin berharga).
 ---
 # Data Preprocessing
 ## Penganganan Outliers
@@ -191,7 +191,7 @@ interactions_labels = df['Recommended'].astype(float)
 # Model Development
 ## Content Based Filtering
 ### NearestNeighbors
-**NearestNeighbors** dari sklearn adalah metode memory-based collaborative filtering. Ia mencari item terdekat (neighbors) menggunakan metrik kesamaan (misalnya cosine similarity)[4](https://scikit-learn.org/stable/modules/neighbors.html#neighbors).
+**NearestNeighbors** dari sklearn adalah metode memory-based collaborative filtering. Ia mencari item terdekat (neighbors) menggunakan metrik kesamaan (misalnya cosine similarity)[[4]](https://scikit-learn.org/stable/modules/neighbors.html#neighbors).
 
 **Keunggulan**:
   - Mudah diimplementasikan.
@@ -200,7 +200,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 ## Collaborative Filtering
 ### LightFM
-**LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP)[3](https://anaconda.org/conda-forge/lightfm#:~:text=LightFM%20is%20a%20Python%20implementation,and%20produces%20high%20quality%20results.).
+**LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP)[[3]](https://anaconda.org/conda-forge/lightfm#:~:text=LightFM%20is%20a%20Python%20implementation,and%20produces%20high%20quality%20results.).
 
 **Keunggulan**:
   - Dapat memanfaatkan fitur pengguna dan item (content-based).
@@ -209,7 +209,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 # Evaluasi 
 ## ROC-AUC
-**ROC-AUC** adalah metrik evaluasi untuk masalah klasifikasi biner yang mengukur kemampuan model dalam membedakan antara dua kelas (dalam kasusmu: pekerjaan yang direkomendasikan 1 dan tidak 0)[5](https://scikit-learn.org/stable/modules/model_evaluation.html).
+**ROC-AUC** adalah metrik evaluasi untuk masalah klasifikasi biner yang mengukur kemampuan model dalam membedakan antara dua kelas (dalam kasusmu: pekerjaan yang direkomendasikan 1 dan tidak 0)[[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 ### ROC adalah kurva yang menunjukkan trade-off antara:
 - True Positive Rate (TPR): berapa banyak item positif yang berhasil dikenali (juga disebut Recall)
@@ -222,7 +222,7 @@ interactions_labels = df['Recommended'].astype(float)
 
 ### Precision@K
 
-**Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model [5](https://scikit-learn.org/stable/modules/model_evaluation.html).
+**Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model [[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 **Rumus Precision@K:**
 
@@ -236,7 +236,7 @@ Dimana:
 
 ### Recall@K
 
-**Recall@K** mengukur seberapa banyak item relevan yang ditemukan di dalam **K rekomendasi teratas** yang diberikan oleh model. Recall menghitung **proporsi item relevan** yang berhasil diprediksi oleh model dari seluruh item relevan yang ada[5](https://scikit-learn.org/stable/modules/model_evaluation.html).
+**Recall@K** mengukur seberapa banyak item relevan yang ditemukan di dalam **K rekomendasi teratas** yang diberikan oleh model. Recall menghitung **proporsi item relevan** yang berhasil diprediksi oleh model dari seluruh item relevan yang ada[[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
 **Rumus Recall@K:**
 
