@@ -17,8 +17,6 @@ Masalah ini perlu diselesaikan secepatnya, mengingat angka pengangguran pada tah
 ## a. Problem Statement
 - Tingginya ketidaksesuaian antara pekerjaan dan jurusan kuliah.
   Sekitar 80% mahasiswa di Indonesia bekerja tidak sesuai dengan jurusannya. Hal ini menimbulkan masalah ketidaksesuaian keterampilan dan berisiko menurunkan produktivitas kerja.
-- Minat dan misi karier individu berubah seiring waktu.
-  Banyak mahasiswa yang saat memilih jurusan belum memiliki pemahaman utuh tentang minat dan arah karier jangka panjang, sehingga pilihan jurusan tidak selalu mencerminkan preferensi karier saat lulus.
 - Ketidakseimbangan antara jumlah lulusan dan lowongan pekerjaan.
   Jumlah lulusan yang terus meningkat tidak sebanding dengan jumlah lapangan kerja yang tersedia, sehingga banyak lulusan terpaksa bekerja di bidang yang tidak sesuai atau bahkan menganggur.
 - Kurangnya sistem yang dapat merekomendasikan pekerjaan secara personal.
@@ -185,8 +183,11 @@ interactions_labels = df['Recommended'].astype(float)
 
 ## Pembagian Data
 - **Tujuan:** Memisahkan data menjadi data latih dan data uji untuk mengevaluasi performa model secara adil.
-- **Metode:** `random_train_test_split` dari lightfm.
+- **Metode:** `random_train_test_split` dari lightfm dan `train_test_split` dari sklearn
   - Rasio: 80% data latih dan 20% data uji.
+- **Filter dan Persiapan Vektor Pekerjaan Relevan** Langkah ini bertujuan untuk:
+   - Menyaring hanya **vektor pekerjaan yang benar-benar relevan** (terdapat dalam data uji `job_test`).
+   - Mengurangi beban komputasi dengan hanya memproses subset pekerjaan yang relevan.
 
 # Model Development
 ## Collaborative Filtering
@@ -198,6 +199,33 @@ interactions_labels = df['Recommended'].astype(float)
   - Tidak memerlukan proses training.
   - Sangat cocok untuk dataset kecil atau sedang.
 
+#### Mengembalikan Indeks ke ID Asli Setelah Penyaringan
+**Tujuan**
+Setelah kita menyaring `job_vecs` ke dalam `filtered_job_vecs` (hanya berisi pekerjaan relevan), hasil rekomendasi (`new_indices`) menggunakan **indeks lokal** dalam array tersebut.
+
+Kode ini mengonversi kembali indeks lokal tersebut ke **indeks asli pekerjaan (dalam job_vecs/job_df)**.
+
+#### Penjelasan Kode
+
+```python
+indices = [[index_map[i] for i in user_recs] for user_recs in new_indices]
+
+```
+
+**Top 10 Rekomendasi pekerjaan yang diberikan oleh model ini adalah sebagai berikut:**
+|User_ID|  Job_ID|  Similarity_Score|
+|-------|--------|------------------|
+|9|        399|            0.7715|
+|9|         16|            0.6667|
+|9|        413|            0.6117|
+|9|        405|            0.5770|
+|9|        440|            0.4997|
+|9|         68|            0.4706|
+|9|         66|            0.3648|
+|9|        247|            0.2883|
+|9|        319|            0.2353|
+|9|         53|            0.1820|
+
 ## Collaborative Filtering + Content Based Filtering (Hybrid)
 ### LightFM
 **LightFM** adalah library Python yang menggabungkan collaborative filtering dan content-based filtering melalui model pembelajaran representasi (embedding). LightFM menggunakan pembelajaran matrix factorization dengan pendekatan supervised (menggunakan loss function seperti BPR, logistic, hinge, atau WARP)[[3]](https://anaconda.org/conda-forge/lightfm#:~:text=LightFM%20is%20a%20Python%20implementation,and%20produces%20high%20quality%20results.).
@@ -206,6 +234,15 @@ interactions_labels = df['Recommended'].astype(float)
   - Dapat memanfaatkan fitur pengguna dan item (content-based).
   - Mendukung rekomendasi untuk item baru (cold start).
   - Cocok untuk skala besar.
+
+**Top 5 Rekomendasi pekerjaan diberikan ses oleh model ini adalah sebagai berikut (sample user=2000)**
+|Job_ID|Requirements|User Skills|
+|------|------------|-----------|
+|499|CSS, HTML, SQL, Java|HTML, JavaScript, Java|
+|137|Data Science, Machine Learning, JavaScript|CSS, Machine Learning, C++|
+|45|AI, JavaScript, Java, Python, Machine Learning|Machine Learning, C++, AI, Python|
+|176|JavaScript, HTML, C++, Data Science|C++, CSS, HTML, Machine Learning|
+|255|HTML, Java, Python|Data Science, C++|
 
 # Evaluasi 
 ## ROC-AUC
@@ -220,12 +257,7 @@ interactions_labels = df['Recommended'].astype(float)
 - 0.5 = model tebak-tebakan (random guess)
 - < 0.5 = model buruk (prediksi berlawanan)
 
-Hasil model:
-  * **AUC Score**: 0.9004
-    Makna: Ini adalah Area Under the ROC Curve, yang mengukur kemampuan model membedakan antara kelas (relevan vs tidak relevan).
-    * **Interpretasi**: Skor 0.9004 sangat bagus — model secara keseluruhan mampu membedakan antara item relevan dan tidak relevan dengan tingkat keakuratan tinggi.
-
-### Precision@K
+## Precision@K
 
 **Precision@K** mengukur seberapa banyak rekomendasi yang relevan di dalam **K rekomendasi teratas** yang diberikan oleh model. Precision menghitung **proporsi item relevan** dalam K item yang diprediksi oleh model [[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
@@ -239,12 +271,7 @@ Dimana:
 - **Jumlah item relevan di top-K** adalah jumlah item yang relevan dalam K rekomendasi teratas.
 - **K** adalah jumlah item teratas yang direkomendasikan.
 
-Hasil pada model:
-  * **Precision@5**: 0.1604
-    Makna: Dari 5 rekomendasi teratas yang diberikan oleh sistem, sekitar 16.04% benar-benar relevan.
-    * **Interpretasi**: Model masih menghasilkan cukup banyak item yang tidak relevan di posisi atas. Untuk sistem rekomendasi, ini berarti hanya 1 dari 6 item yang direkomendasikan tepat sasaran
-
-### Recall@K
+## Recall@K
 
 **Recall@K** mengukur seberapa banyak item relevan yang ditemukan di dalam **K rekomendasi teratas** yang diberikan oleh model. Recall menghitung **proporsi item relevan** yang berhasil diprediksi oleh model dari seluruh item relevan yang ada[[5]](https://scikit-learn.org/stable/modules/model_evaluation.html).
 
@@ -258,11 +285,65 @@ Dimana:
 - **Jumlah total item relevan** adalah jumlah keseluruhan item relevan yang seharusnya direkomendasikan kepada pengguna.
 - **K** adalah jumlah item teratas yang direkomendasikan.
 
-Hasil model:
-  * **Recall@5**: 0.8020
-    Makna: Dari semua item relevan yang seharusnya direkomendasikan, 80.20% berhasil dimasukkan dalam 5 besar.
-    * **Interpretasi**: Model sangat baik dalam menemukan item yang relevan — ia menangkap sebagian besar dari apa yang penting, meskipun tidak semuanya benar-benar akurat (lihat Precision).
+## MAP (Mean Average Precision)
+**MAP (Mean Average Precision)** adalah salah satu metrik evaluasi yang digunakan dalam sistem rekomendasi dan pencarian informasi untuk **mengukur kualitas peringkat hasil rekomendasi** berdasarkan relevansi terhadap ground truth (label kebenaran).
 
+MAP menilai:
+- Seberapa awal item yang relevan muncul dalam daftar rekomendasi.
+- Seberapa lengkap item relevan tercakup dalam top-K rekomendasi.
+
+**Rumus MAP**
+
+MAP dihitung sebagai rata-rata dari **Average Precision (AP)** untuk setiap user.
+
+1. **Average Precision (AP)**
+
+Untuk satu user:
+
+$
+\text{AP} = \frac{1}{|\text{Item Relevan}|} \sum_{k=1}^{N} P(k) \cdot rel(k)
+$
+
+- \( P(k) \) = Precision pada posisi ke-`k`.
+- \( rel(k) \) = 1 jika item ke-`k` relevan, 0 jika tidak.
+- \( N \) = Jumlah item direkomendasikan.
+
+2. **Mean Average Precision (MAP)**
+
+$
+\text{MAP} = \frac{1}{|U|} \sum_{u=1}^{|U|} \text{AP}_u
+$
+
+- \( |U| \) = Jumlah user.
+- $\text{AP}_u$ = Average Precision untuk user ke-`u`.
+
+## Hasil Evaluasi Model Collaborative Filtering
+|Metrik|	Nilai	|Interpretasi|
+|------|--------|------------|
+|Precision@10|	0.3520|	Rata-rata, 35.2% dari 10 rekomendasi yang diberikan adalah benar (relevan).|
+|Recall@10|	0.9099|	Rata-rata, 90.99% dari total pekerjaan relevan berhasil direkomendasikan.|
+|MAP@10|	0.4529|	Kualitas ranking cukup baik — item relevan muncul relatif awal di daftar.|
+
+## Hasil Evaluasi Model Hybrid Recommendation
+|Metrik|	Nilai	|Interpretasi|
+|------|--------|------------|
+|Precision@5| 0.1604|Rata-rata, 16% dari 5 rekomendasi relevan| 
+|Recall@5| 0.8020|Rata-rata, 80.2% dari total pekerjaan relevan direkomendasikan|
+|AUC Score| 0.9004|Skor 90% sangat bagus - membedakan antara item relevan dan tidak relevan dengan tingkat keakuratan yang tinggi| 
+
+## Hubungan dengan Business Understanding
+### a. Problem Statement:
+Permasalahan utama yang dihadapi dunia kerja Indonesia adalah  tingginya mismatch antara latar belakang pendidikan dan pekerjaan, serta minimnya sistem rekomendasi pekerjaan yang adaptif dan personal, maka:
+   - Nilai recall **tinggi** dari kedua model menunjukan bahwa sistem ini dapat mengidentifikasi sebagian besar pekerjaan relevan bagi pengguna dan mampu meminimaliris mismatch
+   - Nilai precision yang masih **sedang** menunjukkan masih ada ruang untuk meningkatkan akurasi, tetapi sudah cukup untuk menjadi fondasi sistem rekomendasi awal.
+
+### b. Goals
+Salah satu tujuan utama adalah membantu mahasiswa dan lulusan menemukan pekerjaan yang sesuai dengan profi dan akademik dan kompetisinya sehingga:
+   - Sistem rekomendasi dengan nilai AUC > 0.9 menandakan bahwa personalization model bekerja sangat baik dalam memahami relevansi.
+   - Implementasi hybrid model memberi arah pada pengembangan sistem adaptif dan berbasis data yang sesuai dengan dinamika kebutuhan pasar tenaga kerja.
+
+### Solution Statement
+Solusi yang dikembangkan adalah model rekomendasi berbasis Collaborative Filtering dan Hybrid System, dievaluasi dengan metrik-metrik seperti precision, recall, MAP, dan AUC untuk menjamin efektivitasnya. Hal ini membuktikan bahwa **Evaluasi model memberikan solusi teknis yang dapat berkontribusi langsung pada visi bisnis, yaitu menciptakan sistem karier berbasis kecocokan dan data-driven decision-making.**
 
 ---
 # Referensi 
