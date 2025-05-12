@@ -199,6 +199,11 @@ interactions_labels = df['Recommended'].astype(float)
   - Tidak memerlukan proses training.
   - Sangat cocok untuk dataset kecil atau sedang.
 
+**Kekurangan**:
+  - Tidak scalable – Performa turun drastis di dataset besar karena komputasi jarak yang mahal.
+  - Cold-start buruk – Tidak bisa merekomendasikan user/item baru tanpa data historis.
+  - Tidak belajar preferensi laten – Hanya berdasarkan kedekatan, tidak bisa menangkap pola mendalam.
+
 #### Mengembalikan Indeks ke ID Asli Setelah Penyaringan
 **Tujuan**
 Setelah kita menyaring `job_vecs` ke dalam `filtered_job_vecs` (hanya berisi pekerjaan relevan), hasil rekomendasi (`new_indices`) menggunakan **indeks lokal** dalam array tersebut.
@@ -234,6 +239,11 @@ indices = [[index_map[i] for i in user_recs] for user_recs in new_indices]
   - Dapat memanfaatkan fitur pengguna dan item (content-based).
   - Mendukung rekomendasi untuk item baru (cold start).
   - Cocok untuk skala besar.
+
+**Kekurangan**:
+  - Butuh tuning dan data fitur yang bagus – Performa sangat tergantung pada parameter dan kualitas fitur user/item.
+  - Kurang efisien di dataset besar – Training bisa lambat jika data sangat besar.
+  - Kurang interpretatif – Embedding sulit dijelaskan secara langsung.
 
 **Top 5 Rekomendasi pekerjaan diberikan ses oleh model ini adalah sebagai berikut (sample user=2000)**
 |Job_ID|Requirements|User Skills|
